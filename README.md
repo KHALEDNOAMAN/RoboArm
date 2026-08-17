@@ -62,7 +62,67 @@ The Inverse Kinematics solver uses an analytical approach to calculate joint ang
 - [ ] Reinforcement Learning for grasping
 - [ ] Mobile App controller
 
-## 🤝 Contributing
+## 🤝 
+---
+
+## How It Works
+
+### Inverse Kinematics Pipeline
+1. **Target Position** (x, y, z) is specified by user or trajectory planner
+2. **IK Solver** calculates required joint angles using analytical geometry:
+   - Shoulder angle: `θ1 = atan2(y, x)`
+   - Elbow angle: Computed via law of cosines
+   - Wrist angles: Derived from desired end-effector orientation
+3. **Trajectory Planner** interpolates between current and target positions using cubic splines for smooth motion
+4. **Servo Driver** converts joint angles to PWM signals (500-2500μs)
+5. **3D Visualization** renders the arm in real-time using Three.js
+
+### Motion Control
+- **Joint Space**: Each servo moves independently at calibrated speed
+- **Cartesian Space**: End-effector follows a straight line in 3D
+- **Cubic Spline**: Smooth acceleration/deceleration profiles
+
+---
+
+## Screenshots & Demo
+
+### 3D Claw Machine Simulator
+```
+┌───────────────────────────────────┐
+│  RoboArm - Claw Machine          │
+│  ┌─────────────────────────────┐ │
+│  │         ┌───┐               │ │
+│  │         │ ╔═╗ ← gripper     │ │
+│  │         │ ║ ║               │ │
+│  │    ┌────┘ ║ └────┐          │ │
+│  │    │   link 2    │          │ │
+│  │    └──────┬──────┘          │ │
+│  │      ┌────┘                 │ │
+│  │      │ link 1               │ │
+│  │  ════╧════  base            │ │
+│  │   ⬤ ⬤ ⬤  prizes            │ │
+│  └─────────────────────────────┘ │
+│  X: 120mm  Y: 85mm  Z: 200mm    │
+│  [Grab] [Release] [Home] [Auto]  │
+└───────────────────────────────────┘
+```
+
+### Joint Angle Visualization
+```
+Joint 1 (Base):     ████████░░  145°
+Joint 2 (Shoulder): ██████░░░░  108°
+Joint 3 (Elbow):    ████░░░░░░   72°
+Joint 4 (Wrist 1):  █████████░  162°
+Joint 5 (Wrist 2):  ███░░░░░░░   54°
+Joint 6 (Gripper):  ██░░░░░░░░   30°
+```
+
+### Live Demo
+> `npm install && npm run dev` → Open `http://localhost:3000`
+> Use mouse to click targets, watch the arm solve IK in real-time!
+
+
+Contributing
 Contributions, issues, and feature requests are welcome!
 
 ## 📄 License
